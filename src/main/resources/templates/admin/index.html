@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8"/>
+    <title>Admin page</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<h1>Users list</h1>
+
+<body>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Login</th>
+        <th>Role</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Action</th>
+    </tr>
+    <tr th:each="user : ${usersList}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.role}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.email}"></td>
+        <td>
+            <a th:href="@{/admin/deleteUser(userIdToDelete=${user.id})}">delete</a>
+            <a th:href="@{/admin/updateUserForm(userIdToUpdate=${user.id})}">update</a>
+        </td>
+    </tr>
+
+</table>
+<div>
+    <nobr>
+        <a th:href="@{/admin/addUserForm}">Add User</a>
+        <a th:href="@{/logout}">Logout</a>
+    </nobr>
+
+</div>
+
+</body>
+</html>

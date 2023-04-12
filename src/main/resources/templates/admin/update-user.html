@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8"/>
+    <title>Updating user</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<h1>Please edit fields</h1>
+
+<body>
+
+<form th:method="POST" th:action="@{/admin/updateUser}" th:object="${userProfile}">
+    <input type="hidden" th:field="*{id}" id="id">
+    <label for="username">Username: </label>
+    <input type="text" th:field="*{username}" id="username">
+    <br><br>
+    <label for="username">Password: </label>
+    <input type="text" th:field="*{password}" id="password">
+    <br><br>
+    <label for="username">Role: </label>
+    <select th:field="*{role}">
+        <option th:value="'ROLE_ADMIN'" th:text="ADMIN"></option>
+        <option th:value="'ROLE_USER'" th:text="USER"></option>
+    </select>
+    <br><br>
+    <label for="username">Name: </label>
+    <input type="text" th:field="*{name}" id="name">
+    <br><br>
+    <label for="username">Email: </label>
+    <input type="text" th:field="*{email}" id="email">
+    <br><br>
+    <input type="submit" value="OK">
+</form>
+
+<form action="/admin/showUsers" target="_blank">
+    <button>Back</button>
+</form>
+</body>
+</html>
