@@ -23,7 +23,7 @@ public class AdminController {
 
     @RequestMapping("/admin/showUsers")
     public String showUsers(Model model) {
-        log.info("Showing admin page page");
+        log.info("Showing admin page");
         model.addAttribute("usersList", userProfileService.findAll());
 
         return "admin/index";

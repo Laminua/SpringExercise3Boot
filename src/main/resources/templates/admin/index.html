@@ -2,41 +2,53 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+          integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/admin_style.css">
     <title>Admin page</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
 </head>
-<h1>Users list</h1>
 
 <body>
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Login</th>
-        <th>Role</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Action</th>
-    </tr>
-    <tr th:each="user : ${usersList}">
-        <td th:text="${user.id}"></td>
-        <td th:text="${user.username}"></td>
-        <td th:text="${user.role}"></td>
-        <td th:text="${user.name}"></td>
-        <td th:text="${user.email}"></td>
-        <td>
-            <a th:href="@{/admin/deleteUser(userIdToDelete=${user.id})}">delete</a>
-            <a th:href="@{/admin/updateUserForm(userIdToUpdate=${user.id})}">update</a>
-        </td>
-    </tr>
+<div class="row justify-content-center">
+    <div class="col-auto">
+        <table class="table-bordered">
+            <caption>List of users</caption>
+            <thead class="table-light"></thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Login</th>
+                <th scope="col">Role</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Action</th>
+            </tr>
+            <tr th:scope="row" th:each="user : ${usersList}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.role}"></td>
+                <td th:text="${user.name}"></td>
+                <td th:text="${user.email}"></td>
+                <td>
+                    <a class="btn btn-outline-warning btn-sm"
+                       th:href="@{/admin/updateUserForm(userIdToUpdate=${user.id})}"
+                       role="button">update</a>
+                    <a class="btn btn-outline-danger btn-sm"
+                       th:href="@{/admin/deleteUser(userIdToDelete=${user.id})}"
+                       role="button">delete</a>
+                </td>
+            </tr>
 
-</table>
-<div>
-    <nobr>
-        <a th:href="@{/admin/addUserForm}">Add User</a>
-        <a th:href="@{/logout}">Logout</a>
-    </nobr>
-
+        </table>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col text-center">
+            <a class="btn btn-primary" th:href="@{/admin/addUserForm}">Add User</a>
+            <a class="btn btn-primary" th:href="@{/logout}">Logout</a>
+        </div>
+    </div>
 </div>
 
 </body>

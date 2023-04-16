@@ -34,11 +34,11 @@ public class UserProfile {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserProfile that = (UserProfile) o;
-        return Objects.equals(name, that.name) && Objects.equals(email, that.email);
+        return Objects.equals(username, that.username) && Objects.equals(password, that.password) && role == that.role && Objects.equals(name, that.name) && Objects.equals(email, that.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, email);
+        return Objects.hash(username, password, role, name, email);
     }
 }
