@@ -1,6 +1,7 @@
 package com.example.springexercise3boot.config;
 
 import com.example.springexercise3boot.models.Role;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -17,6 +18,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
@@ -29,6 +31,9 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
                                         Authentication authentication) throws IOException, ServletException {
 
         handle(request, response, authentication);
+
+        log.info("User with username " + authentication.getName() + " has logged in");
+
         clearAuthenticationAttributes(request);
     }
     protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
@@ -42,8 +47,8 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
     protected String determineTargetUrl(final Authentication authentication) {
 
         roleTargetUrlMap = new HashMap<>();
-        roleTargetUrlMap.put(Role.ROLE_USER.toString(), "/welcome");
-        roleTargetUrlMap.put(Role.ROLE_ADMIN.toString(), "/admin/showUsers");
+        roleTargetUrlMap.put(Role.ROLE_USER.toString(), "/user/welcome");
+        roleTargetUrlMap.put(Role.ROLE_ADMIN.toString(), "/admin/index");
 
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (final GrantedAuthority grantedAuthority : authorities) {

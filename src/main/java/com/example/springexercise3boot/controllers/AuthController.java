@@ -1,19 +1,22 @@
 package com.example.springexercise3boot.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
-@Controller
-@Slf4j
+@RestController
 @RequestMapping("/auth")
+@Slf4j
 public class AuthController {
 
     @GetMapping("/login")
-    public String loginPage() {
+    public ModelAndView loginPage() {
         log.info("Authentication page has been requested");
-
-        return "auth/login";
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("auth/login");
+        return modelAndView;
     }
 }
+

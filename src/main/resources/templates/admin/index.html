@@ -1,18 +1,21 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<!doctype html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"
+            integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+            crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
           integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/admin_style.css">
     <title>Admin page</title>
-</head>
-
 <body>
+
 <div class="row justify-content-center">
     <div class="col-auto">
-        <table class="table-bordered">
+        <table id="usersTable" class="table-bordered">
             <caption>List of users</caption>
             <thead class="table-light"></thead>
             <tr>
@@ -23,21 +26,46 @@
                 <th scope="col">Email</th>
                 <th scope="col">Action</th>
             </tr>
-            <tr th:scope="row" th:each="user : ${usersList}">
-                <td th:text="${user.id}"></td>
-                <td th:text="${user.username}"></td>
-                <td th:text="${user.role}"></td>
-                <td th:text="${user.name}"></td>
-                <td th:text="${user.email}"></td>
-                <td>
-                    <a class="btn btn-outline-warning btn-sm"
-                       th:href="@{/admin/updateUserForm(userIdToUpdate=${user.id})}"
-                       role="button">update</a>
-                    <a class="btn btn-outline-danger btn-sm"
-                       th:href="@{/admin/deleteUser(userIdToDelete=${user.id})}"
-                       role="button">delete</a>
-                </td>
-            </tr>
+            <tbody id="tableData"></tbody>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $.ajax({
+                            url: 'getUsers',
+                            dataType: 'text',
+                            type: 'GET',
+                            success: function (data) {
+                                var usersList = $.parseJSON(data);
+
+                                var table = "";
+                                for (var i = 0; i < usersList.length; i++) {
+                                    table += "<tr>";
+                                    table += "<td>" + usersList[i].id + "</td>";
+                                    table += "<td>" + usersList[i].username + "</td";
+                                    table += "<td></td>";
+                                    table += "<td>" + usersList[i].role + "</td";
+                                    table += "<td></td>";
+                                    table += "<td>" + usersList[i].name + "</td>";
+                                    table += "<td>" + usersList[i].email + "</td>";
+
+                                    var userId = usersList[i].id;
+                                    var linkToUpdateUser = 'href="/admin/updateUserForm?id=';
+                                    var linkToDeleteUser = 'href="/admin/deleteUser?userIdToDelete=';
+
+                                    table += "<td>" + '<a class="btn btn-outline-warning btn-sm"';
+                                    table += linkToUpdateUser + userId + '"';
+                                    table += 'role="button">update</a>';
+                                    table += '<a class="btn btn-outline-danger btn-sm"';
+                                    table += linkToDeleteUser + userId + '"';
+                                    table += 'role="button">delete</a></td>'
+                                    table += '</tr>';
+                                }
+                                table += '<tbody>';
+                                document.getElementById("tableData").innerHTML = table;
+                            }
+                        }
+                    )
+                });
+            </script>
 
         </table>
     </div>
@@ -45,8 +73,8 @@
 <div class="container">
     <div class="row">
         <div class="col text-center">
-            <a class="btn btn-primary" th:href="@{/admin/addUserForm}">Add User</a>
-            <a class="btn btn-primary" th:href="@{/logout}">Logout</a>
+            <a class="btn btn-primary" href="/admin/addUserForm">Add User</a>
+            <a class="btn btn-primary" href="/logout">Logout</a>
         </div>
     </div>
 </div>
