@@ -21,7 +21,7 @@ public class RedirectController {
 
         String redirectUrl = "";
         if (role.contains(Role.ROLE_ADMIN.toString())) {
-            redirectUrl = "admin/showUsers";
+            redirectUrl = "admin/index";
         } else if (role.contains(Role.ROLE_USER.toString())) {
             redirectUrl = "welcome";
         }

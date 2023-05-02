@@ -2,6 +2,7 @@ package com.example.springexercise3boot.services;
 
 import com.example.springexercise3boot.models.UserProfile;
 import com.example.springexercise3boot.repositories.UserProfilesRepository;
+import com.example.springexercise3boot.util.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +27,17 @@ public class UserProfileService {
 
     public UserProfile findOne(int id) {
         Optional<UserProfile> foundUserProfile = userProfilesRepository.findById(id);
-        return foundUserProfile.orElse(null);
+        return foundUserProfile.orElseThrow(() -> new UserNotFoundException("No user by ID: " + id));
     }
 
     public UserProfile findByUsername(String username) {
-        return userProfilesRepository.queryDistinctByUsername(username);
+        Optional<UserProfile> foundUserProfile = userProfilesRepository.queryDistinctByUsername(username);
+        return foundUserProfile.orElse(null);
+    }
+
+    public UserProfile findByEmail(String email) {
+        Optional<UserProfile> foundUserProfile = userProfilesRepository.queryDistinctByEmail(email);
+        return foundUserProfile.orElse(null);
     }
 
     @Transactional
