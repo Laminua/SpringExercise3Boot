@@ -14,9 +14,7 @@ public class AuthController {
     @GetMapping("/login")
     public ModelAndView loginPage() {
         log.info("Authentication page has been requested");
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("auth/login");
-        return modelAndView;
+        return new ModelAndView("auth/login");
     }
 }
 

@@ -27,7 +27,7 @@ public class SpringSecurityConfig {
         http.csrf().disable()
                 .authorizeHttpRequests()
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/auth/login", "/error", "/css/**").permitAll()
+                .antMatchers("/auth/login", "/error", "/css/**", "/swagger-ui/**", "/api/**").permitAll()
                 .anyRequest().hasAnyRole("USER", "ADMIN")
                 .and()
                 .formLogin().loginPage("/auth/login")

@@ -4,7 +4,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -23,7 +22,7 @@ public class CustomExceptionHandler {
     public ResponseEntity<Map<String, List<String>>> handleValidationErrors(BindException ex) {
         errors = ex.getBindingResult().getFieldErrors()
                 .stream()
-                .map(FieldError::getDefaultMessage)
+                .map(a -> String.format("%s: %s", a.getField(), a.getDefaultMessage()))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }

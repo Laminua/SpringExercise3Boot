@@ -56,7 +56,5 @@ public class UserProfileValidator implements Validator {
                 errors.rejectValue("email", "400", "Email already taken");
             }
         }
-
-
     }
 }

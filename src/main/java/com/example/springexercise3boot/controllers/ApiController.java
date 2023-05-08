@@ -11,49 +11,34 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/api/")
 @Slf4j
-public class AdminController {
+public class ApiController {
     private final UserProfileService userProfileService;
     private final UserProfileValidator userProfileValidator;
 
     @Autowired
-    public AdminController(UserProfileService userProfileService, UserProfileValidator userProfileValidator) {
+    private ApiController(UserProfileService userProfileService, UserProfileValidator userProfileValidator) {
         this.userProfileService = userProfileService;
         this.userProfileValidator = userProfileValidator;
     }
 
-    @GetMapping("/index")
-    public ModelAndView showAdminPage() {
-        log.info("Showing admin page");
-
-        return new ModelAndView("admin/index");
-    }
-
-    @GetMapping("/getUsers")
+    @GetMapping("users")
     public List<UserProfile> getUsers() {
-        log.info("requested \"getUsersList\" endpoint");
+        log.info("API: requesting list of UserProfiles");
 
         return userProfileService.findAll();
     }
 
-    @GetMapping("/addUserForm")
-    public ModelAndView showAddUserForm() {
-        log.info("Showing \"Add user\" page");
-
-        return new ModelAndView("admin/add-user");
-    }
-
-    @PostMapping("/addUser")
-    public ResponseEntity<String> addUser(@Valid UserProfileDTO profileDTO, BindingResult bindingResult)
+    @PostMapping(value = "users", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<String> addUser(@RequestBody @Valid UserProfileDTO profileDTO, BindingResult bindingResult)
             throws BindException {
-        log.info("Attempt inserting user into database. Login: " + profileDTO.getUsername()
+        log.info("API: Attempt inserting user into database. Login: " + profileDTO.getUsername()
                 + " Role: " + profileDTO.getRole()
                 + " Name: " + profileDTO.getName()
                 + " Email: " + profileDTO.getEmail());
@@ -61,57 +46,57 @@ public class AdminController {
         userProfileValidator.validate(profileDTO, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            log.error("User can't be added because of invalid data");
+            log.error("API: User can't be added because of invalid data");
             throw new BindException(bindingResult);
         }
 
-        log.info("User successfully created");
         userProfileService.save(convertToUserProfile(profileDTO));
+        log.info("API: User successfully created");
 
-        return new ResponseEntity<>("User successfully created", HttpStatus.CREATED);
+        return new ResponseEntity<>("API: User successfully created", HttpStatus.CREATED);
     }
 
-    @GetMapping("/deleteUser")
-    public ResponseEntity<String> deleteUser(@RequestParam("userIdToDelete") int id) {
-        log.info("Attempt removing user from database, ID: " + id);
+    @DeleteMapping("deleteUser")
+    public ResponseEntity<String> deleteUserById(@RequestParam("id") int id) {
+        log.info("API: Attempt removing user from database, ID: " + id);
 
         if (userProfileService.findOne(id) != null) {
             userProfileService.delete(id);
         }
-        log.info("User successfully deleted");
-        return new ResponseEntity<>("User successfully deleted", HttpStatus.OK);
+        log.info("API: User with id " + id + " successfully deleted");
+        return new ResponseEntity<>("API: User successfully deleted", HttpStatus.OK);
     }
 
-    @GetMapping("/updateUserForm")
-    public ModelAndView showUpdateUserForm() {
-        log.info("Showing \"update user\" page");
-
-        return new ModelAndView("admin/update-user");
-    }
-
-    @GetMapping("/getUser/{id}")
-    public UserProfile getUserProfileById(@PathVariable int id) {
-        log.info("UserProfile with ID: " + id + " requested from DB");
+    @GetMapping("users/{id}")
+    public UserProfile getUserProfileById(@PathVariable("id") int id) {
+        log.info("API: UserProfile with ID: " + id + " requested from DB");
 
         return userProfileService.findOne(id);
     }
 
-    @PostMapping("/updateUser")
-    public ResponseEntity<String> updateUser(@Valid UserProfileDTO profileDTO, BindingResult bindingResult)
+    @GetMapping("user/{username}")
+    public UserProfile getUserProfileByUsername(@PathVariable("username") String username) {
+        log.info("API: UserProfile with username " + username + " requested from DB");
+
+        return userProfileService.findByUsername(username);
+    }
+
+    @PostMapping("updateUser")
+    public ResponseEntity<String> updateUser(@RequestBody @Valid UserProfileDTO profileDTO, BindingResult bindingResult)
             throws BindException {
-        log.info("Attempt to update user in database. Name: " + profileDTO.getName() + " Email: " + profileDTO.getEmail());
+        log.info("API: Attempt to update user in database. Name: " + profileDTO.getName() + " Email: " + profileDTO.getEmail());
 
         userProfileValidator.validate(profileDTO, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            log.error("User can't be updated because of invalid data");
+            log.error("API: User can't be updated because of invalid data");
             throw new BindException(bindingResult);
         }
 
-        log.info("User successfully updated");
+        log.info("API: User successfully updated");
         userProfileService.update(profileDTO.getId(), convertToUserProfile(profileDTO));
 
-        return new ResponseEntity<>("User successfully updated", HttpStatus.OK);
+        return new ResponseEntity<>("API: User successfully updated", HttpStatus.OK);
     }
 
     private UserProfile convertToUserProfile(UserProfileDTO profileDTO) {

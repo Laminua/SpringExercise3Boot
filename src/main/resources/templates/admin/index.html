@@ -30,7 +30,7 @@
             <script type="text/javascript">
                 $(document).ready(function () {
                     $.ajax({
-                            url: 'getUsers',
+                            url: '/admin/users',
                             dataType: 'text',
                             type: 'GET',
                             success: function (data) {
@@ -49,7 +49,7 @@
 
                                     var userId = usersList[i].id;
                                     var linkToUpdateUser = 'href="/admin/updateUserForm?id=';
-                                    var linkToDeleteUser = 'href="/admin/deleteUser?userIdToDelete=';
+                                    var linkToDeleteUser = 'href="/admin/deleteUser?id=';
 
                                     table += "<td>" + '<a class="btn btn-outline-warning btn-sm"';
                                     table += linkToUpdateUser + userId + '"';
